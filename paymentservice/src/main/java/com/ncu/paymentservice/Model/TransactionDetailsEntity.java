@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Payment {
+@Table(name="transaction")
+public class TransactionDetailsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Integer transactionId;
@@ -28,7 +30,7 @@ public class Payment {
     @Column
     String cardNumber;
 
-    public Payment(String paymentMode, Integer bookingId, String upiId, String cardNumber) {
+    public TransactionDetailsEntity(String paymentMode, Integer bookingId, String upiId, String cardNumber) {
         this.paymentMode = paymentMode;
         this.bookingId = bookingId;
         this.upiId = upiId;

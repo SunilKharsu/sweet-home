@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.ncu.bookingservice.Model.Booking;
+import com.ncu.bookingservice.Model.BookingInfoEntity;
 import com.ncu.bookingservice.Payload.Request.BookRoomRequest;
 import com.ncu.bookingservice.Payload.Request.PaymentRequest;
 import com.ncu.bookingservice.Payload.Response.BookRoomResponse;
@@ -33,9 +33,11 @@ public class BookingController {
 
     @PostMapping(path = "/booking")
     public ResponseEntity<?> bookRoom(@RequestBody BookRoomRequest bookRoomRequest) {
-        BookRoomResponse bookingAfterSave = bookingService.bookRoom(bookRoomRequest);
-        return new ResponseEntity<BookRoomResponse>(bookingAfterSave, HttpStatus.CREATED);
+        BookingInfoEntity bookingAfterSave = bookingService.bookRoom(bookRoomRequest);
+        return new ResponseEntity<BookingInfoEntity>(bookingAfterSave, HttpStatus.CREATED);
     }
+    
+    
 
     @PostMapping("/booking/{bookingId}/transaction")
     public ResponseEntity<?> transactionBooking(@RequestBody PaymentRequest paymentRequest,
@@ -48,8 +50,15 @@ public class BookingController {
         paymentRequest.setBookingId(bookingId);
         ResponseEntity<Integer> response = restTemplate.postForEntity(paymentUrl, paymentRequest, Integer.class);
         if (response.getStatusCode() == HttpStatus.CREATED) {
-            Booking booking = bookingService.updateTransactionId(bookingId, response.getBody());
-            return new ResponseEntity<Booking>(booking, HttpStatus.OK);
+        	BookingInfoEntity booking = bookingService.updateTransactionId(bookingId, response.getBody());
+        	String message = "Booking confirmed for user with aadhaar number: /n"
+        			+ booking.getAadharNumber()
+        			+ " | "
+        			+ "Here are the booking details: " + booking.toString();
+        	
+        	System.out.println(message);
+        	
+            return new ResponseEntity<BookingInfoEntity>(booking, HttpStatus.OK);
         } else {
             return new ResponseEntity("something went wrong", HttpStatus.BAD_GATEWAY);
         }

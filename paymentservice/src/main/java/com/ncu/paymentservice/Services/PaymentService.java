@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.ncu.paymentservice.Model.Payment;
+import com.ncu.paymentservice.Model.TransactionDetailsEntity;
 import com.ncu.paymentservice.Payload.PaymentDTO;
 import com.ncu.paymentservice.Repository.PaymentRepository;
 
@@ -18,13 +18,13 @@ public class PaymentService {
     PaymentRepository paymentRepository;
 
     @Transactional
-    public Payment addPayment(PaymentDTO payment) {
-        Payment paymentBeforeSave = new Payment(payment.getPaymentMode(), payment.getBookingId(), payment.getUpiId(),
+    public TransactionDetailsEntity addPayment(PaymentDTO payment) {
+    	TransactionDetailsEntity paymentBeforeSave = new TransactionDetailsEntity(payment.getPaymentMode(), payment.getBookingId(), payment.getUpiId(),
                 payment.getCardNumber());
         return paymentRepository.save(paymentBeforeSave);
     }
     
-    public Optional<Payment> getDetails(int transactionId){
+    public Optional<TransactionDetailsEntity> getDetails(int transactionId){
     	return paymentRepository.findById(transactionId);
     	
     }

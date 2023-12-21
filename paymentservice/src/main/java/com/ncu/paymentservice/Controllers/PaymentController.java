@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ncu.paymentservice.Model.Payment;
+import com.ncu.paymentservice.Model.TransactionDetailsEntity;
 import com.ncu.paymentservice.Payload.PaymentDTO;
 import com.ncu.paymentservice.Services.PaymentService;
 
@@ -22,7 +22,7 @@ public class PaymentController {
 
     @PostMapping("/transaction")
     public ResponseEntity<?> pay(@RequestBody PaymentDTO paymentDTO) {
-        Payment paymentAfterSave = paymentService.addPayment(paymentDTO);
+    	TransactionDetailsEntity paymentAfterSave = paymentService.addPayment(paymentDTO);
         return new ResponseEntity<Integer>(paymentAfterSave.getTransactionId(), HttpStatus.CREATED);
     }
     

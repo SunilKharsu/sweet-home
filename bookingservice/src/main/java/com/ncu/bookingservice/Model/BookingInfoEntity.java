@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Booking {
+@Table(name="booking")
+public class BookingInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Integer bookingId;
@@ -33,21 +35,24 @@ public class Booking {
     Integer roomPrice;
     @Column
     Integer transactionId = 0;
+    @Column
+    Date bookedOn;
     
 
-    public Booking(Date fromDate, Date toDate, String aadharNumber, Integer numOfRooms, String roomNumbers,
-            Integer roomPrice) {
+    public BookingInfoEntity(Date fromDate, Date toDate, String aadharNumber, Integer numOfRooms, String roomNumbers,
+            Integer roomPrice, Date bookedOn) {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.aadharNumber = aadharNumber;
         this.numOfRooms = numOfRooms;
         this.roomNumbers = roomNumbers;
         this.roomPrice = roomPrice;
+        this.bookedOn = bookedOn;
         
     }
 
-    public Booking(Date fromDate, Date toDate, String aadharNumber, Integer numOfRooms, String roomNumbers,
-            Integer roomPrice, Integer transactionId) {
+    public BookingInfoEntity(Date fromDate, Date toDate, String aadharNumber, Integer numOfRooms, String roomNumbers,
+            Integer roomPrice, Integer transactionId, Date bookedOn) {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.aadharNumber = aadharNumber;
@@ -55,6 +60,7 @@ public class Booking {
         this.roomNumbers = roomNumbers;
         this.roomPrice = roomPrice;
         this.transactionId = transactionId;
+        this.bookedOn = bookedOn;
         
     }
 }

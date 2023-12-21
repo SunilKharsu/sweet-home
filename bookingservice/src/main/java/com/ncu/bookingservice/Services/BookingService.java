@@ -2,13 +2,12 @@ package com.ncu.bookingservice.Services;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ncu.bookingservice.Model.Booking;
+import com.ncu.bookingservice.Model.BookingInfoEntity;
 import com.ncu.bookingservice.Payload.Request.BookRoomRequest;
 import com.ncu.bookingservice.Payload.Response.BookRoomResponse;
 import com.ncu.bookingservice.Repositories.BookingRepository;
@@ -23,19 +22,19 @@ public class BookingService {
     @Autowired
     BookingRepository bookingRepository;
 
-    public BookRoomResponse bookRoom(BookRoomRequest bookRoomRequest) {
+    public BookingInfoEntity bookRoom(BookRoomRequest bookRoomRequest) {
         String roomNumbers = generateRoomNumbers(bookRoomRequest.getNumberOfRooms());
         Integer priceOfAllRooms = calculateRoomsPrice(bookRoomRequest.getNumberOfRooms(), bookRoomRequest.getFromDate(),
                 bookRoomRequest.getToDate());
         Date currentDate = getCurrentDate();
-        Booking booking = new Booking(bookRoomRequest.getFromDate(), bookRoomRequest.getToDate(),
-                bookRoomRequest.getAadharNumber(), bookRoomRequest.getNumberOfRooms(), roomNumbers, priceOfAllRooms);
-        Booking newBooking = bookingRepository.save(booking);
+        BookingInfoEntity booking = new BookingInfoEntity(bookRoomRequest.getFromDate(), bookRoomRequest.getToDate(),
+                bookRoomRequest.getAadharNumber(), bookRoomRequest.getNumberOfRooms(), roomNumbers, priceOfAllRooms, currentDate);
+        BookingInfoEntity newBooking = bookingRepository.save(booking);
         
         System.out.println(newBooking.toString()); 
 
         
-        return new BookRoomResponse(roomNumbers, priceOfAllRooms);
+        return booking;
     }
 
     public Date getCurrentDate() {
@@ -64,8 +63,8 @@ public class BookingService {
     	return sb.toString();
     }
 
-    public Booking updateTransactionId(int bookingId, int transactionId) {
-        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+    public BookingInfoEntity updateTransactionId(int bookingId, int transactionId) {
+    	BookingInfoEntity booking = bookingRepository.findById(bookingId).orElse(null);
         if(booking == null) {
         	throw new PaymentException("Invalid booking Id", 400);
         }
